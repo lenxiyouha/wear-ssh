@@ -45,18 +45,22 @@ class _WearSshAppState extends State<WearSshApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '圆表SSH',
-      debugShowCheckedModeBanner: false,
-      theme: buildAppTheme(),
-      navigatorKey: appNavigatorKey,
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaler: _clampScaler(context)),
-        child: child ?? const SizedBox.shrink(),
-      ),
-      home: AppScope(
-        model: _model,
-        child: ListenableBuilder(
+    // AppScope 必须包在 MaterialApp 外层：
+    // push 出去的路由（编辑/会话/文件/终端）都挂在 Navigator 下，
+    // 只有放在这里，所有页面才能共享同一个 AppModel。
+    return AppScope(
+      model: _model,
+      child: MaterialApp(
+        title: '圆表SSH',
+        debugShowCheckedModeBanner: false,
+        theme: buildAppTheme(),
+        navigatorKey: appNavigatorKey,
+        builder: (context, child) => MediaQuery(
+          data:
+              MediaQuery.of(context).copyWith(textScaler: _clampScaler(context)),
+          child: child ?? const SizedBox.shrink(),
+        ),
+        home: ListenableBuilder(
           listenable: _model,
           builder: (context, _) => _StartupGate(model: _model),
         ),

@@ -220,6 +220,13 @@ class AppModel extends ChangeNotifier {
       rethrow;
     } catch (e) {
       _connecting = false;
+      // 用户在出错前已点取消：按取消处理，不弹错误框
+      if (seq != _connectSeq) {
+        try {
+          await socket?.close();
+        } catch (_) {}
+        throw ConnectCancelled();
+      }
       try {
         await socket?.close();
       } catch (_) {}

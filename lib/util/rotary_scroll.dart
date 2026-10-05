@@ -2,25 +2,28 @@ import 'package:flutter/material.dart';
 
 /// 表冠滚动分发器。
 ///
-/// 屏幕在 initState 里 attach 自己的主滚动控制器，dispose 时 detach。
-/// 表冠产生的增量会驱动当前附着的列表平滑滚动。
+/// 采用控制器栈：页面 push 时 attach 自己的主滚动控制器，pop 时 detach。
+/// 栈顶始终是当前最上层页面的列表，表冠事件只驱动它；
+/// 子页面 pop 后，下层页面的控制器自动恢复为栈顶。
 class RotaryScroll {
-  static ScrollController? _active;
+  static final List<ScrollController> _stack = [];
 
   /// 每格表冠对应的逻辑像素
   static const double _pixelsPerDetent = 56;
 
   static void attach(ScrollController controller) {
-    _active = controller;
+    _stack.remove(controller);
+    _stack.add(controller);
   }
 
   static void detach(ScrollController controller) {
-    if (identical(_active, controller)) _active = null;
+    _stack.remove(controller);
   }
 
   static void handle(double delta) {
-    final controller = _active;
-    if (controller == null || !controller.hasClients) return;
+    if (_stack.isEmpty) return;
+    final controller = _stack.last;
+    if (!controller.hasClients) return;
     final position = controller.position;
     final target = (position.pixels + delta * _pixelsPerDetent)
         .clamp(position.minScrollExtent, position.maxScrollExtent)
