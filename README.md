@@ -13,7 +13,7 @@
   <img alt="Flutter" src="https://img.shields.io/badge/Flutter-3.47.x-02569B?logo=flutter&logoColor=white"/>
   <img alt="Platform" src="https://img.shields.io/badge/Platform-Wear%20OS%20%7C%20Android-3DDC84?logo=android&logoColor=white"/>
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green"/>
-  <img alt="CI" src="https://github.com/PLACEHOLDER/wear-ssh/actions/workflows/build-apk.yml/badge.svg"/>
+  <img alt="CI" src="https://github.com/lenxiyouha/wear-ssh/actions/workflows/build-apk.yml/badge.svg"/>
 </p>
 
 ---
